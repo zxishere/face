@@ -100,43 +100,42 @@ class ListUsers extends Command
      */
     public function handle()
     {
+
         $focusUsers = env('FOCUS_USERS') ? array_filter(explode(',', env('FOCUS_USERS'))) : [];
         $dt = Carbon::now();
-        if($dt->isWeekday()){
-            if($dt->toTimeString() == '00:00:00' || !Cache::has('focusUsers')){
-                Cache::forget('focusUsers');
-                $this->info("Init Users!");
-                Cache::forever('focusUsers', $focusUsers);
+        $expiresAt = (new Carbon)->diffInMinutes(Carbon::createFromTime(22, 0, 0), true);
+        if(date("H:i") == '07:01' || !Cache::has('focusUsers')){
+            Cache::forget('focusUsers');
+            $this->info("Init Users!");
+            Cache::put('focusUsers', $focusUsers, $expiresAt);
+        }
+        $cacheFocusUsers = Cache::get('focusUsers');
+        if(!empty($cacheFocusUsers)){
+            if (Cache::has('sessionId')) {
+                $sessionId = $this->checkSessionId(Cache::get('sessionId'));
+            }else{
+                $sessionId = $this->getSessionId();
             }
-            $cacheFocusUsers = Cache::get('focusUsers');
-            if(!empty($cacheFocusUsers)){
-                if (Cache::has('sessionId')) {
-                    $sessionId = $this->checkSessionId(Cache::get('sessionId'));
-                }else{
-                    $sessionId = $this->getSessionId();
-                }
-                $queryData = [
-                    'date' => $dt->toDateString(),
-                    'sortBy' => 'attend_time',
-                    'sortOrder' => 'asc',
-                    'lang' => 'cn',
-                    'sessionId' => $sessionId
-                ];
-                $queryResult = $this->post('user/attendance/queryByDate', $queryData);
-                foreach ($queryResult->result as $user) {
-                    if ($user->attendTime != '' && in_array($user->person, $cacheFocusUsers)) {
-                        $title = $dt->toDateString().' '.$user->attendTime.' '.$user->person.'Check In';
-                        $img = str_replace(env('DOMAIN'), env('REPLACE_DOMAIN'), $user->attendHistoryFaceUrl);
-                        $desc = '![]('.$img.')';
-                        $this->scSend($title, $desc);
-                        if (($key = array_search($user->person, $cacheFocusUsers)) !== false) {
-                            unset($cacheFocusUsers[$key]);
-                        }
+            $queryData = [
+                'date' => $dt->toDateString(),
+                'sortBy' => 'attend_time',
+                'sortOrder' => 'asc',
+                'lang' => 'cn',
+                'sessionId' => $sessionId
+            ];
+            $queryResult = $this->post('user/attendance/queryByDate', $queryData);
+            foreach ($queryResult->result as $user) {
+                if ($user->attendTime != '' && in_array($user->person, $cacheFocusUsers)) {
+                    $title = $dt->toDateString().' '.$user->attendTime.' '.$user->person.'Check In';
+                    $img = str_replace(env('DOMAIN'), env('REPLACE_DOMAIN'), $user->attendHistoryFaceUrl);
+                    $desc = '![]('.$img.')';
+                    $this->scSend($title, $desc);
+                    if (($key = array_search($user->person, $cacheFocusUsers)) !== false) {
+                        unset($cacheFocusUsers[$key]);
                     }
                 }
-                Cache::forever('focusUsers', $cacheFocusUsers);
             }
-
+            Cache::put('focusUsers', $focusUsers, $expiresAt);
         }
     }
 }

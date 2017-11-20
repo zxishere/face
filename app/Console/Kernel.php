@@ -26,7 +26,10 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('face:list')->withoutOverlapping();
+        $schedule->command('face:list')
+                ->weekdays()
+                ->between('7:00', '22:00')
+                ->withoutOverlapping();
     }
 
     /**
