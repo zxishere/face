@@ -135,7 +135,7 @@ class ListUsers extends Command
                     }
                 }
             }
-            Cache::put('focusUsers', $focusUsers, $expiresAt);
+            Cache::put('focusUsers', $cacheFocusUsers, $expiresAt);
         }
     }
 }

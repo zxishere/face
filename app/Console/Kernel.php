@@ -24,8 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+/*        $$schedule->command('inspire')
+                 ->everyMinute();*/
         $schedule->command('face:list')
                 ->weekdays()
                 ->between('7:00', '22:00')
