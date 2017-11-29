@@ -103,6 +103,7 @@ class ListUsers extends Command
 
         $focusUsers = env('FOCUS_USERS') ? array_filter(explode(',', env('FOCUS_USERS'))) : [];
         $dt = Carbon::now();
+        $this->info('Start:'.$dt);
         $expiresAt = (new Carbon)->diffInMinutes(Carbon::createFromTime(22, 0, 0), true);
         if(date("H:i") == '07:01' || !Cache::has('focusUsers')){
             Cache::forget('focusUsers');
