@@ -14,7 +14,7 @@ class ListUsers extends Command
      *
      * @var string
      */
-    protected $signature = 'face:list';
+    protected $signature = 'face:list {--sessionId}';
 
     /**
      * The console command description.
@@ -100,7 +100,15 @@ class ListUsers extends Command
      */
     public function handle()
     {
-
+        if($this->option('sessionId')){
+            if (Cache::has('sessionId')) {
+                $sessionId = $this->checkSessionId(Cache::get('sessionId'));
+            }else{
+                $sessionId = $this->getSessionId();
+            }
+            echo $sessionId;
+            exit;
+        }
         $focusUsers = env('FOCUS_USERS') ? array_filter(explode(',', env('FOCUS_USERS'))) : [];
         $dt = Carbon::now();
         $this->info('Start:'.$dt);

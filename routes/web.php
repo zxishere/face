@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/s', function () {
+    return $exitCode = Artisan::call('face:list',['--sessionId' => 'default']);
+});
