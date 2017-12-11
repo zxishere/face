@@ -31,6 +31,7 @@ class Kernel extends ConsoleKernel
                 ->weekdays()
                 ->between('7:00', '22:00')
                 ->everyMinute()
+                ->withoutOverlapping()
                 ->sendOutputTo($filePath);
     }
 
