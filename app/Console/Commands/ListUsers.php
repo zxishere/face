@@ -100,6 +100,10 @@ class ListUsers extends Command
      */
     public function handle()
     {
+/*        $this->call('wechat:send', [
+            'user' => env('WECHAT_USER'), '--type' => 'text', '--content' => '111'
+        ]);
+        exit;*/
         if($this->option('sessionId')){
             if (Cache::has('sessionId')) {
                 $sessionId = $this->checkSessionId(Cache::get('sessionId'));
@@ -135,10 +139,18 @@ class ListUsers extends Command
             $queryResult = $this->post('user/attendance/queryByDate', $queryData);
             foreach ($queryResult->result as $user) {
                 if ($user->attendTime != '' && in_array($user->person, $cacheFocusUsers)) {
-                    $title = $dt->toDateString().' '.$user->attendTime.' '.$user->person.'Check In';
+                    $title = $dt->toDateString().' '.$user->attendTime.' '.$user->person.' Check In';
+                    $this->call('wechat:send', [
+                        'user' => env('WECHAT_USER'), '--type' => 'image', '--content' => $user->attendHistoryFaceUrl
+                    ]);
+                    $this->call('wechat:send', [
+                        'user' => env('WECHAT_USER'), '--type' => 'text', '--content' => $title
+                    ]);
+                    /*
                     $img = str_replace(env('DOMAIN'), env('REPLACE_DOMAIN'), $user->attendHistoryFaceUrl);
                     $desc = '![]('.$img.')';
                     $this->scSend($title, $desc);
+                    */
                     if (($key = array_search($user->person, $cacheFocusUsers)) !== false) {
                         unset($cacheFocusUsers[$key]);
                     }
