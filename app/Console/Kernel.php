@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     {
 /*        $$schedule->command('inspire')
                  ->everyMinute();*/
-        $filePath = storage_path('logs'). "/cron.txt";
+        $filePath = storage_path('app/public'). "/cron.txt";
         $schedule->command('face:list')
                 ->weekdays()
                 ->between('7:00', '22:00')
