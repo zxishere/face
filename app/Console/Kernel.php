@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Redis;
 
 class Kernel extends ConsoleKernel
 {
@@ -26,13 +27,16 @@ class Kernel extends ConsoleKernel
     {
 /*        $$schedule->command('inspire')
                  ->everyMinute();*/
-        $filePath = storage_path('app/public'). "/cron.txt";
-        $schedule->command('face:list')
+        $schedule->command('staffs:update')
+                ->dailyAt('23:59');
+        $schedule->command('staffs:check')
                 ->weekdays()
                 ->between('7:00', '22:00')
                 ->everyMinute()
                 ->withoutOverlapping()
-                ->sendOutputTo($filePath);
+                ->sendOutputTo(storage_path('app/public'). "/staffs.txt")->when(function () {
+                    Redis::get('staffs') > 0;
+                });
     }
 
     /**

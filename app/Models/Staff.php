@@ -8,5 +8,11 @@ class Staff extends Model
 {
     protected $table = 'staffs';
 
-    protected $guarded = ['task','_token'];
+    protected $guarded = ['_token'];
+
+    public function subscribes()
+    {
+        return $this->morphMany('App\Models\Subscribe', 'subscribable');
+    }
+
 }

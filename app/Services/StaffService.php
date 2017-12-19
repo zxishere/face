@@ -66,7 +66,7 @@ class StaffService
         return is_null($sessionId) ? $this->getSessionId() : $this->checkSessionId($sessionId);
     }
 
-    private function queryData(){
+    public function queryData(){
         $dt = Carbon::now();
         $queryData = [
             'date' => $dt->toDateString(),
@@ -75,24 +75,28 @@ class StaffService
             'lang' => 'cn',
             'sessionId' => $this->sessionId()
         ];
-        return $this->post('user/attendance/queryByDate', $queryData);
+        $result = $this->post('user/attendance/queryByDate', $queryData);
+        foreach ($result->result as $user) {
+            if ($user->attendTime != ''){
+                $this->staff->updateOrCreate(
+                    ['name' => $user->person],
+                    ['latest' => $dt->toDateString() .' '. $user->attendTime.':00']
+                );
+            }
+        }
+        return $result;
     }
 
-    public function update($downloadImage = false){
-        $dt = Carbon::now();
+    public function update(){
         $multi_curl = new MultiCurl();
         foreach ($this->queryData()->result as $user) {
             if ($user->attendTime != ''){
                 $imageUrl = ($user->leaveHistoryFaceUrl != '') ? $user->leaveHistoryFaceUrl : $user->attendHistoryFaceUrl;
-                $staff = $this->staff->firstOrCreate(['name' => $user->person]);
-                $fileName = $staff->id .'.jpg';
+                $fileName = $this->staff->where('name',$user->person)->first()->id .'.jpg';
                 $multi_curl->addDownload($imageUrl, storage_path('app/public/staffs/'). $fileName);
-                $staff->update(['latest' => $dt->toDateString() .' '. $user->attendTime.':00']);
             }
         }
-        if ($downloadImage) {
-            $multi_curl->start();
-        }
+        $multi_curl->start();
         $multi_curl->close();
         Log::info("Multi download completed!");
     }

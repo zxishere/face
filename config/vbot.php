@@ -77,4 +77,5 @@ return [
            'nickname' => '',
        ],
    ],
+   'session' => 'vbot'
 ];

@@ -49,7 +49,7 @@ class WeChatSend extends Command
 
     }
 
-    private function getUsername($name){
+/*    private function getUsername($name){
         $params = [
             'type' => 'friends',
             'method' => 'getUsername',
@@ -61,12 +61,13 @@ class WeChatSend extends Command
         }else{
             die( 'friends return bool');
         }
-    }
+    }*/
 
     private function send($type, $username, $content){
         $params = [
             'type' => $type,
-            'username' => $this->getUsername($username),
+            // 'username' => $this->getUsername($username),
+            'username' => $username,
             'content' => $content
         ];
         if ($type == 'image') {

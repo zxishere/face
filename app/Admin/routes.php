@@ -12,4 +12,5 @@ Route::group([
 
     $router->get('/', 'HomeController@index');
     $router->resource('staffs', StaffController::class);
+    $router->resource('friends', FriendController::class);
 });

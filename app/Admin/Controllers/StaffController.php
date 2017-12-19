@@ -3,6 +3,8 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Staff;
+use App\Models\Friend;
+use App\Models\Subscribe;
 
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -23,6 +25,7 @@ class StaffController extends Controller
      */
     public function index()
     {
+
         return Admin::content(function (Content $content) {
 
             $content->header('Staffs');
@@ -81,10 +84,22 @@ class StaffController extends Controller
                 return asset('storage/staffs/'.$this->id.'.jpg') ;
             })->image('50','50');
 
+
+            $grid->model()->with('subscribes');
+            // $grid->model()->with(['subscribes', 'subscribes.subscriber']);
+
+
             $grid->name('Name')->sortable();
             // $grid->title()->editable();
             $grid->gender()->editable('select', self::SEX)->sortable();
             $grid->column('latest')->sortable();
+
+            $grid->subscribes('Subscribers')->display(function ($subscribes) {
+                $subscribes = array_map(function ($subscribe) {
+                    return asset('storage/friends/'.$subscribe['friend_id'].'.jpg');
+                }, $subscribes);
+                return $subscribes;
+            })->image('50','50');
 
             $grid->filter(function($filter){
                 // 去掉默认的id过滤器
@@ -98,7 +113,11 @@ class StaffController extends Controller
             $grid->disableCreation();
             $grid->disableRowSelector();
             $grid->disableExport();
-            $grid->disableActions();
+            $grid->actions(function ($actions) {
+                $actions->disableDelete();
+                // $actions->disableEdit();
+            });
+            // $grid->disableActions();
 
         });
     }
@@ -115,8 +134,36 @@ class StaffController extends Controller
             $form->display('name');
             $form->text('title');
             $form->select('gender')->options(self::SEX);
-            // $form->display('created_at', 'Created At');
-            // $form->display('updated_at', 'Updated At');
+            $form->multipleSelect('Subscribers')->options(function () use ($form) {
+                if ($form->model()->id) {
+                    $subscribes = $form->model()->subscribes;
+                    if ($subscribes) {
+                $script = <<<JS
+$('.Subscribers').select2().val({$subscribes->pluck('friend_id')}).trigger("change");
+JS;
+                Admin::script($script);
+                    }
+                    return Friend::pluck('nick_name', 'id');
+                }
+
+            });
+
+            $form->ignore(['Subscribers']);
+
+            //保存后回调
+            $form->saved(function (Form $form) {
+                $subscribes = [];
+                collect(request()->Subscribers)->filter()->each(function ($friend_id) use(&$subscribes) {
+                    $subscribes[] =  new Subscribe(['friend_id' => $friend_id]);
+                });
+                $form->model()->subscribes()->delete();
+                $form->model()->subscribes()->saveMany($subscribes);
+
+            });
+
+
         });
     }
+
+
 }

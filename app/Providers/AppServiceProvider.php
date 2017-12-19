@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Encore\Admin\Config\Config;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Config::load();
+        Relation::morphMap([
+            'staffs' => 'App\Models\Staff',
+            // 'videos' => 'App\Video',
+        ]);
     }
 
     /**

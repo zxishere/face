@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__.'/vendor/autoload.php';
 
+use App\Vbot\Observer;
+use App\Vbot\MessageHandler;
+
+
 use Hanson\Vbot\Foundation\Vbot;
 use Hanson\Vbot\Message\Text;
 
@@ -86,16 +90,13 @@ $options = [
        ],
    ],
 ];
-// dd($options);
 $vbot = new Vbot($options);
-$vbot->messageHandler->setHandler(function ($message) {
-    echo $username = $message['from']['UserName'];
-    // echo $Uin = $message['from']['Uin'];
-    Text::send($username, 'Hi, I\'m Vbot!');
-});
-
-$vbot->observer->setFetchContactObserver(function(array $contacts){
-    print_r($contacts['friends']);
-});
-
+$vbot->messageHandler->setHandler([MessageHandler::class, 'messageHandler']);
+$vbot->observer->setQrCodeObserver([Observer::class, 'setQrCodeObserver']);
+$vbot->observer->setLoginSuccessObserver([Observer::class, 'setLoginSuccessObserver']);
+$vbot->observer->setReLoginSuccessObserver([Observer::class, 'setReLoginSuccessObserver']);
+$vbot->observer->setExitObserver([Observer::class, 'setExitObserver']);
+$vbot->observer->setFetchContactObserver([Observer::class, 'setFetchContactObserver']);
+$vbot->observer->setBeforeMessageObserver([Observer::class, 'setBeforeMessageObserver']);
+$vbot->observer->setNeedActivateObserver([Observer::class, 'setNeedActivateObserver']);
 $vbot->server->serve();
