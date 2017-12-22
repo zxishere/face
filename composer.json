@@ -23,7 +23,8 @@
         "laravel/tinker": "~1.0",
         "php-curl-class/php-curl-class": "^8.0",
         "predis/predis": "^1.1",
-        "spatie/eloquent-sortable": "^3.4"
+        "spatie/eloquent-sortable": "^3.4",
+        "sunra/php-simple-html-dom-parser": "^1.5"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

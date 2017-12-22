@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a86188a8932781b2ac75918a674a2e94",
+    "content-hash": "f0fec77093f85fc8aed9b2cd83598ba5",
     "packages": [
         {
             "name": "aferrandini/phpqrcode",
@@ -1327,16 +1327,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.5.26",
+            "version": "v5.5.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "d7e6a7aab600c5cfae595ea22074ac3c536cbc28"
+                "reference": "b4fb6eeb227b7327b4ca7f92263b693ec9ac9875"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/laravel/framework/d7e6a7aab600c5cfae595ea22074ac3c536cbc28.zip",
-                "reference": "d7e6a7aab600c5cfae595ea22074ac3c536cbc28",
+                "url": "https://files.phpcomposer.com/files/laravel/framework/b4fb6eeb227b7327b4ca7f92263b693ec9ac9875.zip",
+                "reference": "b4fb6eeb227b7327b4ca7f92263b693ec9ac9875",
                 "shasum": ""
             },
             "require": {
@@ -1457,7 +1457,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2017-12-18T14:15:59+00:00"
+            "time": "2017-12-20T15:43:48+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -2554,6 +2554,54 @@
                 "temporary-directory"
             ],
             "time": "2017-09-11T08:51:13+00:00"
+        },
+        {
+            "name": "sunra/php-simple-html-dom-parser",
+            "version": "v1.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sunra/php-simple-html-dom-parser.git",
+                "reference": "75b9b1cb64502d8f8c04dc11b5906b969af247c6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/sunra/php-simple-html-dom-parser/75b9b1cb64502d8f8c04dc11b5906b969af247c6.zip",
+                "reference": "75b9b1cb64502d8f8c04dc11b5906b969af247c6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Sunra\\PhpSimple\\HtmlDomParser": "Src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sunra",
+                    "email": "sunra@yandex.ru",
+                    "homepage": "https://github.com/sunra"
+                },
+                {
+                    "name": "S.C. Chen",
+                    "homepage": "http://sourceforge.net/projects/simplehtmldom/"
+                }
+            ],
+            "description": "Composer adaptation of: A HTML DOM parser written in PHP5+ let you manipulate HTML in a very easy way! Require PHP 5+. Supports invalid HTML. Find tags on an HTML page with selectors just like jQuery. Extract contents from HTML in a single line.",
+            "homepage": "https://github.com/sunra/php-simple-html-dom-parser",
+            "keywords": [
+                "dom",
+                "html",
+                "parser"
+            ],
+            "time": "2016-11-22T22:57:47+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

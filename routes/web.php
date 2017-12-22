@@ -15,6 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/s', function () {
-    return $exitCode = Artisan::call('face:list',['--sessionId' => 'default']);
+Route::group(['prefix' => 'dapenti', 'as' => 'dapenti.'], function ()  {
+	Route::get('/', ['as' => 'index', 'uses' => 'DapentiController@index']);
+	Route::get('list/{type}', ['as' => 'list', 'uses' => 'DapentiController@list']);
+	Route::get('image', ['as' => 'image', 'uses' => 'DapentiController@image']);
+	Route::get('show/{id}', ['as' => 'show', 'uses' => 'DapentiController@show']);
 });
