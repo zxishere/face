@@ -39,7 +39,7 @@ class WeChatSend extends Command
         ];
         $curl = new Curl();
         $curl->setHeader('Content-Type', 'application/json');
-        $curl->post(env('SWOOLE'), $data);
+        $curl->post(env('SWOOLE_IP').':'.env('SWOOLE_PORT'), $data);
         $curl->close();
         if (!$curl->error) {
             return $curl->response;
